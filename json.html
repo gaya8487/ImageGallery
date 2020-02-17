@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+        //document.write( localStorage.getItem("myImage"));
+
+           var v_list =[];
+           var v_Obj= {};
+
+            
+           v_Obj.title = "선";
+            v_Obj.writer="1234";
+            v_Obj.password="1234";
+            v_Obj.imgDes="1ㅇㅇㅇ";
+            v_Obj.imgTag="ㄴㄴ";
+            v_Obj.date="2020/2/1711:53:9:291";
+            v_Obj.imgUr='{"result": "true","msg" : "sun.jpg"}';
+
+            v_list.push(v_Obj);
+
+
+            v_Obj.title = "가위";
+            v_Obj.writer="233ㄴㄴㄴ";
+            v_Obj.password="111";
+            v_Obj.imgDes="2134";
+            v_Obj.imgTag="ㄴㄴㄴ";
+            v_Obj.date="2020/2/1711:53:19:540";
+            v_Obj.imgUr='{"result": "true","msg" : "power_on.png"}';
+
+            v_list.push(v_Obj);
+
+            v_Obj.title = "ㅇㅇㅇ";
+            v_Obj.writer="ㄴㄴㄴ";
+            v_Obj.password="ㄷㄷ";
+            v_Obj.imgDes="ㄹㄹ";
+            v_Obj.imgTag="ㄴㅇㄻㄴㅇㄹ";
+            v_Obj.date="2020/2/1711:57:40:340";
+            v_Obj.imgUr='{"result": "true","msg" : "_왼쪽.png"}';
+            
+            v_list.push(v_Obj);
+
+
+     
+        // [{"title":"선","writer":"1234","password":"1234","imgDes":"","imgTag":"","date":"2020/2/1711:53:9:291","seq":1,"imgUrl":"{\"result\": \"true\",\"msg\" : \"sun.jpg\"}"},
+        // {"title":"가위","writer":"`2142","password":"2","imgDes":"34234","imgTag":"ssdfs","date":"2020/2/1711:53:19:540","seq":2,"imgUrl":"{\"result\": \"true\",\"msg\" : \"_왼쪽.png\"}"},
+        // {"title":"poweroff","writer":"ss","password":"1234","imgDes":"1234","imgTag":"","date":"2020/2/1711:57:40:340","seq":3,"imgUrl":"{\"result\": \"true\",\"msg\" : \"power_on.png\"}"},
+        // {"title":"ㅇㅇㅇ","writer":"","password":"","imgDes":"ㅇㅇㅇ","imgTag":"","date":"2020/2/1712:9:44:763","seq":4,"imgUrl":"{\"result\": \"true\",\"msg\" : \" (5).jpeg\"}"},
+
+
+               
+
+        localStorage.setItem("myImage",JSON.stringify(v_list));  
+    
+        
+    </script>
+    
+</body>
+</html>

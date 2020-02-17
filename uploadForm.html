@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        form {
+            width: 600px;
+            margin: 0 auto;
+            margin-top: 50px;
+            border: 2px;
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- <form action="./upload.php" method="post" enctype="multipart/form-data" name="submit_form"> -->
+    <form  method="post" enctype="multipart/form-data" name="submit_form">
+        <div class="form-group">
+            <label for="exampleFormControlInput1">제목</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="제목">
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="exampleFormControlInput1">작성자</label>
+                    <input type="text" class="form-control" id="writer" name="writer"  placeholder="이름">
+                </div>
+                <div class="col">
+                    <label for="exampleFormControlInput1">비밀번호</label>
+                    <input type="text" class="form-control" id ="password"  name ="password" placeholder="비밀번호">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">설명</label>
+            <textarea class="form-control" id="imgDes" name="imgDes"  rows="3" placeholder="사진 설명"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlFile1">파일 선택</label>
+            <!-- <input type="file" class="form-control-file" id="fileToUpload" onchange="f_chgImg()"> -->
+            <input type="file" class="form-control-file" id="fileToUpload" >
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">태그</label>
+            <input type="text" class="form-control" id="imgTag" name="imgTag" placeholder="태그">
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block" id="submitButton" >등록</button>
+    </form>
+
+
+    <script>
+        var img_name;
+
+        var today = new Date();   
+
+        var year = today.getFullYear(); // 년도
+        var month = today.getMonth() + 1;  // 월
+        var date = today.getDate();  // 날짜
+
+        var hours = today.getHours(); // 시
+        var minutes = today.getMinutes();  // 분
+        var seconds = today.getSeconds();  // 초
+        var milliseconds = today.getMilliseconds(); // 밀리초
+
+        var now = year + '/' + month + '/' + date + hours + ':' + minutes + ':' + seconds + ':' + milliseconds;
+
+        var submitButtonClick= function(e){
+                e.preventDefault(); //이벤트 전파 방지 (기존 서브밋 방지) //폼 검사
+
+                uploadImg();
+
+         }
+
+         function v_info(imgUrl){
+
+
+                var f =document.forms["submit_form"];
+                f.action ="./mainView.html";   //서브밋할 경로
+
+                var v_key = "myImage";      // localStorage key값 지정
+
+                var v_records = []; //여러개 jsoon을 담을 배열
+                var v_image = {}; //사진 정보 저장할 객체
+
+                console.log(document.getElementById("title").value);
+                console.log(now);
+
+                //객체에 정보 저장
+                v_image.title=document.getElementById("title").value;
+                v_image.writer=document.getElementById("writer").value;
+                v_image.password=document.getElementById("password").value;
+                v_image.imgDes=document.getElementById("imgDes").value;
+                v_image.imgTag=document.getElementById("imgTag").value; 
+
+
+                v_image.date=now; //현재 시간
+
+            
+                if(!localStorage.getItem(v_key)){    // 값이 최초 등록될 때
+                    v_image.seq = 1;                               // 최초 입력값에 대한 고유 키값
+                    v_records.push(v_image);                  // 배열에 json 등록
+                } else {                                               // 이미 값이 존재할 때
+                    v_records = JSON.parse(localStorage.getItem(v_key));
+                    v_image.seq =  v_records[v_records.length-1].seq + 1;    // 마지막값에 +1  
+                    v_records.push(v_image);
+                }
+        
+                var v_imgurl = JSON.parse(imgUrl);
+                console.log(v_imgurl);
+ 
+
+                if(v_imgurl["result"]=="true"){  //성공하면 로컬스토리지 담고 서브밋
+                    var temp = imgUrl;
+                    v_image.imgUrl = temp;
+
+                    console.log(temp);
+                    
+                    localStorage.setItem(v_key,JSON.stringify(v_records));  // 저장
+
+                    opener.parent.location.reload();
+                    window.close();
+                    
+                     f.submit();
+
+                 
+
+                }else{  //실피하면 error alert
+                
+
+                    alert(v_imgurl["msg"]);
+
+                }
+
+         }
+
+        window.onload= function(){
+            document.getElementById("submitButton").addEventListener("click",submitButtonClick);
+        }
+
+        function uploadImg(){
+                 // 이미지 올리기
+              
+                 var v_files = document.getElementById("fileToUpload").files[0];
+                 var v_formData = new FormData();
+                 v_formData.append("fileToUpload",v_files);
+
+                 var v_ajax = new XMLHttpRequest();
+                 v_ajax.open("post","upload.php",true); //이미지 업로드
+                 v_ajax.send(v_formData); //파일 데이터 넣기
+                 v_ajax.onreadystatechange=function(){
+                    if(v_ajax.readyState==4 &&v_ajax.status==200){
+                        console.log("------------------------------");
+                        console.log("v_ajax" , v_ajax);
+                        console.log("------------------------------");
+                        v_ajax.responseText; // 이미지 url
+                       
+                        v_info( v_ajax.responseText);
+                    }
+                 }   
+            }
+
+
+
+
+    </script>
+
+</body>
+
+</html>

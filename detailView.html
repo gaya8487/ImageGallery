@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        form {
+            width: 600px;
+            margin: 0 auto;
+            margin-top: 50px;
+            border: 2px;
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <form  method="" enctype="multipart/form-data" name="">
+        <div class="form-group">
+            <label for="exampleFormControlInput1">제목</label>
+            <input type="text" class="form-control" id="title" name="title"  >
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="exampleFormControlInput1">작성자</label>
+                    <input type="text" class="form-control" id="writer" name="writer" placeholder="이름" >
+                </div>
+                <div class="col">
+                        <label for="exampleFormControlInput1">날짜</label>
+                        <input type="text" class="form-control" id="date" name="date" placeholder="날짜" >
+                    </div>
+           
+            </div>
+        </div>
+        <img id="myimg" width="600px" height="400px" >
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">설명</label>
+            <input class="form-control" id="imgDes" name="imgDes" rows="3" placeholder="사진 설명"   >
+        </div>
+      
+        <div class="form-group">
+            <label for="exampleFormControlInput1">태그</label>
+            <input type="text" class="form-control" id="imgTag" name="imgTag" placeholder="태그"  >
+        </div>
+        
+        <div class="form-group"></div>
+        
+            <input  placeholder="비밀번호를 입력해주세요" id=myInput>
+            <button  type=button class="btn btn-primary btn-lg" id="updateButton" onclick="myUpdate()">수정</button>
+            <button type=button class="btn btn-primary btn-lg " id="deleteButton" onclick="myDelete()">삭제</button>
+      </div>
+
+     
+
+        <div class="form-group  "></div>
+          <button class="btn btn-primary btn-lg btn-block" id="closeButton">닫기</button>
+        </div>
+
+    </form>
+    <script>
+            var v_url = location.href.split("?")[1].split("=")[1];
+            //alert(v_url);
+           // var v_img = document.createElement("img");
+           console.log(v_url);
+           
+           var l_title = document.getElementById("title");
+           var l_writer = document.getElementById("writer");
+           var l_date = document.getElementById("date");
+           var l_imgDes = document.getElementById("imgDes");
+           var l_imgTag = document.getElementById("imgTag");
+           var myimg = document.getElementById("myImg");
+        
+        
+           var v_imageObj = JSON.parse(localStorage.getItem("myImage"));
+            console.log(v_imageObj);
+        
+            for(var i=0; i< v_imageObj.length;i++){
+                 if(v_url==(v_imageObj[i]["seq"])){
+        
+                    console.log(v_imageObj[i]);
+                    console.log(v_imageObj[i]["title"]);
+                       
+                    //alert(v_imageObj[i]["title"]);
+                    l_title.value=v_imageObj[i]["title"];
+                    l_writer.value=v_imageObj[i]["writer"];
+                    l_date.value=v_imageObj[i]["date"];
+                    l_imgDes.value=v_imageObj[i]["imgDes"];
+                    l_imgTag.value=v_imageObj[i]["imgTag"];
+                  
+                    var imgUrl = JSON.parse(v_imageObj[i]["imgUrl"]);
+                    $("#myimg").attr("src", "uploads/"+imgUrl["msg"]);
+                 }
+        
+            }
+        
+            document.getElementById('closeButton').addEventListener("click", function () {
+                window.close();   // 창 닫기
+             });
+
+             function myUpdate(){
+
+                v_myPassword = document.getElementById("myInput").value;
+
+            
+                var v_imageObj3 = JSON.parse(localStorage.getItem("myImage"));
+                console.log(v_imageObj3);  
+
+
+                 for(var i=0; i< v_imageObj3.length;i++){
+                        
+                        if(v_url==(v_imageObj3[i]["seq"])){
+                        
+                            if(v_imageObj3[i]["password"]==v_myPassword){
+                               // console.log("password:"+v_imageObj2+"입력"+v_imageObj2[i]["password"]);
+                                 
+                                   // alert("일치");
+                                    //localStorage.removeItem(i);
+
+
+                                  var vu_title =   l_title.value;
+                                  var vu_writer = l_writer.value;
+                                  var vu_date= l_date.value;
+                                  var vu_imgDes= l_imgDes.value;
+                                  var vu_imgTag = l_imgTag.value;
+
+
+                                  v_imageObj3[i]["title"]=vu_title;
+                                  v_imageObj3[i]["writer"]=vu_writer;
+                                  v_imageObj3[i]["imgDes"]=vu_imgDes;
+                                  v_imageObj3[i]["imgTag"]=vu_imgTag;
+                             
+
+
+                                localStorage.setItem("myImage",JSON.stringify(v_imageObj3));
+
+                                 opener.parent.location.reload();
+                                 window.close();
+                           
+                                
+                            }else{
+
+                                alert("비밀번호가 틀렸습니다");
+                            }
+                        }
+                                
+                    
+        
+            }
+
+
+             }
+
+             function myDelete(){
+               var v_myPassword = document.getElementById("myInput").value;
+                //alert(v_myPassword);
+
+                    var v_imageObj2 = JSON.parse(localStorage.getItem("myImage"));
+                    console.log(v_imageObj2);
+                                
+                    
+                    for(var i=0; i< v_imageObj2.length;i++){
+                        
+                        if(v_url==(v_imageObj[i]["seq"])){
+                        
+                            if(v_imageObj2[i]["password"]==v_myPassword){
+                               // console.log("password:"+v_imageObj2+"입력"+v_imageObj2[i]["password"]);
+                                 
+                                   // alert("일치");
+                                    //localStorage.removeItem(i);
+                                    v_imageObj2.splice(i,1);
+                                    localStorage.setItem("myImage",JSON.stringify(v_imageObj2));
+
+                                    opener.parent.location.reload();
+                                    window.close();
+                           
+                                
+                            }else{
+
+                                alert("비밀번호가 틀렸습니다");
+                            }
+                        }
+                                
+                    }
+                
+                 
+             }
+            
+        
+        //    v_img.src = v_url;
+        //     v_img.width = 200;
+        //     v_img.height = 200;
+        //     v_img.addEventListener("click", function () {
+        //         window.close();   // 창 닫기
+        //     });
+            
+        //     document.body.appendChild(v_img);
+        </script>
+
+</body>
